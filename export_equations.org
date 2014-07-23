@@ -1,0 +1,68 @@
+#+TITLE: Exporting equations from LaTeX to transparent png files
+
+* Preview package
+Refer to this so post: http://tex.stackexchange.com/questions/14974/exporting-all-equations-from-a-document-as-individual-svg-files
+
+First, add the following to your LaTeX file. Include the other environments you
+want to include.
+#+begin_src LaTeX
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\PreviewEnvironment{align}
+\PreviewEnvironment{align*}
+#+end_src
+
+Burst the pdf file
+#+begin_src sh
+pdftk yourfile.pdf burst
+#+end_src
+
+Then move the resulting files to a separate directory, and run the following to obtain:
+#+begin_src sh
+for i in *.pdf do; convert -density 300 $i $i.png;
+#+end_src
+
+* Extracting without numbers
+For extracting without equation numbers, check out @Damiens's answer from the SO
+post:
+
+To extend the answer from @Kilgore:
+
+To get rid of the equation numbers (AND you have an excellent backup of the original file(s)!), yon can do the following:
+
+#+begin_src bash
+#!/bin/bash
+
+files=`find . | grep -e '\.tex$'`
+
+for file in $files ; do
+
+    echo "Stripping: $file"
+    sed -i 's/begin{equation}/begin{equation*}/g'   $file
+    sed -i 's/end{equation}/end{equation*}/g'   $file
+
+done
+#+end_src
+
+The individual equations can be extracted using:
+
+#+begin_src LaTeX
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{equation*}
+\PreviewEnvironment{align*}
+#+end_src
+
+(Note the addition of the *)
+
+To remove the excessive whitespace, use the following utility:
+
+#+begin_src sh
+pdfcrop output.pdf
+#+end_src
+
+And, finally, you can split this into individual svg files
+
+#+begin_src sh
+pdf2svg filename.pdf output-page%03d.svg all
+#+end_src

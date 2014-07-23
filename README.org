@@ -1,0 +1,5 @@
+#+title: Tips and Tricks
+#+author: @nrs
+
+This repository contains useful information gleaned over a long period of time.
+Look inside, and you might find something useful.

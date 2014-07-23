@@ -1,0 +1,7 @@
+#+title: Extracting the most frequently used words from a text file sorted
+
+#+begin_src sh
+cat yourfile.txt | sed 's|[,.]||g' | tr ' ' '\n' | sort | uniq -c | sort -k 1 -n -r
+#+end_src
+
+Redirect the output to a file in order to save.
