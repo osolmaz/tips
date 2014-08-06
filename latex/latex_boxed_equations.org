@@ -1,0 +1,76 @@
+#+title: Boxed equations in \LaTeX
+
+Observe the example below to see how to put boxes around =align= environments.
+
+#+begin_src LaTeX
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{empheq}
+
+% Command "alignedbox{}{}" for a box within an align environment
+% Source: http://www.latex-community.org/forum/viewtopic.php?f=46&t=8144
+\newlength\dlf  % Define a new measure, dlf
+\newcommand\alignedbox[2]{
+% Argument #1 = before & if there were no box (lhs)
+% Argument #2 = after & if there were no box (rhs)
+&  % Alignment sign of the line
+{
+\settowidth\dlf{$\displaystyle #1$}
+    % The width of \dlf is the width of the lhs, with a displaystyle font
+\addtolength\dlf{\fboxsep+\fboxrule}
+    % Add to it the distance to the box, and the width of the line of the box
+\hspace{-\dlf}
+    % Move everything dlf units to the left, so that & #1 #2 is aligned under #1 & #2
+\boxed{#1 #2}
+    % Put a box around lhs and rhs
+}
+}
+
+\begin{document}
+\begin{enumerate}
+
+\item A simple box around an equation:
+%
+\begin{equation}
+  \boxed{a = b}
+\end{equation}
+%
+
+\item A box around one equation among a group:
+% Source:
+% http://www.latex-community.org/forum/viewtopic.php?f=46&t=8144
+%
+\begin{subequations}
+\begin{align}
+  f(x) &= a \\
+  \alignedbox{g(x)}{=5}
+\end{align}
+\end{subequations}
+%
+Another way to do it (unaligned):
+%
+\begin{subequations}
+\begin{align}
+  f(x) & = a\\
+  g(x) & = 5
+\end{align}
+\begin{equation}
+  \boxed{h(x) = f(x)/g(x)}
+\end{equation}
+\end{subequations}
+%
+
+\item A box around all the equations of an \verb|align| environment
+% Source:
+% http://www.latex-community.org/forum/viewtopic.php?f=44&t=19600
+\begin{empheq}[box=\fbox]{align}
+  a &= b\nonumber\\
+  c &= 42\\
+  f(x) &= a x-c \nonumber
+\end{empheq}
+%
+
+\end{enumerate}
+\end{document}
+#+end_src

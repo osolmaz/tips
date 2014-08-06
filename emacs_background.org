@@ -1,0 +1,31 @@
+#+title:  "Starting Emacs as a background process by default"
+
+Emacs does not start in the background by default, so if you want to continue
+using your shell, you must append `&` to the end of your command like
+
+#+begin_src sh
+$ emacs &
+#+end_src
+
+It is those small things that matter in life, and you might find it surprising
+how much stress is relieved when you don't have to type `&` every time you start
+a crucial program. So I defined the following function in my zsh
+configuration.
+
+#+begin_src sh
+function em() {
+  (emacs "$@"&)
+}
+#+end_src
+
+It also works for bash. So when you want to edit a file, you can just type
+
+#+begin_src sh
+$ em yourfile.txt
+#+end_src
+
+Please note that it discards the output and error messages.
+
+So there it is. I was inspired by gvim in this.
+
+This was also posted to nrs.github.io, my personal blog.
