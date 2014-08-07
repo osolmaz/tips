@@ -1,0 +1,99 @@
+#+title: Printing code
+
+Let's assume you have a C++ project which has C++ source and header files, and
+you want to print all the contents of these files with optimal
+(readability)/(number of pages).
+
+* Collecting all the code
+
+Here are the contents of a shell script, =collect_code.sh=. It collects the
+filenames into arrays, then outputs all the contents into =collected_code.cpp=
+while removing empty lines. It also prints a nice stamp which has the filename
+before the contents of that file.
+
+#+begin_src sh
+#!/bin/sh
+
+srcfiles=($(find "src" -name '*.cpp'))
+includefiles=($(find "include" -name '*.h'))
+
+result=collected_code.cpp
+
+if [ -f $result ]; then
+    rm $result
+    touch $result
+else
+    touch $result
+fi
+
+for i in "${includefiles[@]}" "${srcfiles[@]}"; do
+    echo >> $result
+    echo "/******************************************************" >> $result
+    echo "*                                                     *" >> $result
+    echo "*    "$i  >> $result
+    echo "*                                                     *" >> $result
+    echo "******************************************************/" >> $result
+    echo >> $result
+    cat $i | sed '/^$/d' >> $result # remove the sed part if you want to keep empty lines
+done
+#+end_src
+
+* Converting to PDF
+
+We will need =text2pdf=, a small utility for creating PDFs out of text files. In
+Arch Linux, you can install the package =text2pdf= from the AUR using yaourt:
+#+begin_src sh
+$ yaourt -S text2pdf
+#+end_src
+
+text2pdf is a filter program. To see the help
+#+begin_src
+$ text2pdf -h
+
+text2pdf [options] [filename]
+
+  text2pdf makes a 7-bit clean PDF file (version 1.1) from any input file.
+  It reads from standard input or a named file, and writes the PDF file
+  to standard output.
+
+  There are various options as follows:
+
+  -h		show this message
+  -f<font>	use PostScript <font> (must be in standard 14, default: Courier)
+  -I		use ISOLatin1Encoding
+  -s<size>	use font at given pointsize (default 10)
+  -v<dist>	use given line spacing (default 12 points)
+  -l<lines>	lines per page (default 60, determined automatically
+                if unspecified)
+  -c<chars>	maximum characters per line (default 80)
+  -t<spaces>	spaces per tab character (default 8)
+  -F		ignore formfeed characters (^L)
+  -A4		use A4 paper (default Letter)
+  -A3		use A3 paper (default Letter)
+  -x<width>	independent paper width in points
+  -y<height>	independent paper height in points
+  -2		format in 2 columns
+  -L		landscape mode
+
+  Note that where one variable is implied by two options, the second option
+  takes precedence for that variable. (e.g. -A4 -y500)
+  In landscape mode, page width and height are simply swapped over before
+  formatting, no matter how or when they were defined.
+
+text2pdf v1.1 (c) Phil Smith, 1996
+
+#+end_src
+
+If you are reading this, thank you Phil Smith. =text2pdf= is awesome.
+
+The page configuration that suited me most was with double column and smaller
+fonts on A4 paper:
+
+#+begin_src sh
+$ text2pdf -2 -A4 -s6 -v6 -c73  collected_code.cpp > collected_code.pdf
+#+end_src
+
+* Conclusion
+
+Modify the scripts to make them suit to your project. In my case, I had to print
+multiple files; this tutorial can be useful for printing any code.
