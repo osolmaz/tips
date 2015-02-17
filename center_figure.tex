@@ -1,0 +1,93 @@
+% My old figure macros
+% I used to use these as dirty hacks back at a time I did not know better
+% I moved them from my Latex boilerplate to here instead of just removing,
+% because they can be useful as a plain TeX reference
+
+\newcommand{\wrap}[4]{
+  \begin{wrapfigure}{#1}{#2\textwidth}
+    \begin{center}
+      \includegraphics[width=#2\textwidth]{#3}
+      \caption{#4}
+    \end{center}
+  \end{wrapfigure}
+}
+
+\newcommand{\centerfigure}[4]{
+  \begin{figure}[htbp]
+    \begin{center}
+      \includegraphics[width=#1\textwidth]{#2}
+      \caption{#3}
+      \label{#4}
+    \end{center}
+  \end{figure}
+}
+
+% Centered figure
+% Usage: \centeredfigure[height=1in, width=1in, scale=0.1, caption=Caption, place=htbp]{path_to_img}
+\def\centeredfigure{\@ifnextchar[\@centeredfigure{\@centeredfigure[]}}
+
+\def\@centeredfigure[#1]#2{
+  \setkeys{hip}{#1}
+
+\def\centeredfigure@includeargs{}
+\ifx\centeredfigure@place\undefined
+  \def\centeredfigure@place{htbp}
+\else
+  \relax
+\fi
+\ifx\centeredfigure@width\undefined
+  \relax
+\else
+  \edef\centeredfigure@includeargs{%
+    \unexpanded\expandafter{\centeredfigure@includeargs}
+    width = \centeredfigure@width,}
+\fi
+\ifx\centeredfigure@height\undefined
+  \relax
+\else
+  \edef\centeredfigure@includeargs{%
+    \unexpanded\expandafter{\centeredfigure@includeargs}
+    height = \centeredfigure@height,}
+\fi
+\ifx\centeredfigure@scale\undefined
+  \relax
+\else
+  \edef\centeredfigure@includeargs{%
+    \unexpanded\expandafter{\centeredfigure@includeargs}
+    scale = \centeredfigure@scale,}
+\fi
+% [\centeredfigure@includeargs] % print the include arguments
+% [\centeredfigure@place] % print the include arguments
+% http://tex.stackexchange.com/questions/11336/macro-for-figure-position
+% The \centeredfigure@place macro needs to be expanded first
+\edef\centeredfigure@figure{\noexpand\begin{figure}[\centeredfigure@place]}%
+\centeredfigure@figure
+% \begin{figure}[htbp]
+% \begin{figure}[\centeredfigure@place]
+  \begin{center}
+    \expandafter\includegraphics\expandafter[\centeredfigure@includeargs]{#2} % include the graphics
+    \ifx\centeredfigure@caption\undefined
+      \relax
+    \else
+      \caption{\centeredfigure@caption}
+    \fi
+    \ifx\centeredfigure@label\undefined
+      \relax
+    \else
+      \label{\centeredfigure@label}
+    \fi
+  \end{center}
+\end{figure}
+\let\centeredfigure@scale\undefined
+\let\centeredfigure@place\undefined
+\let\centeredfigure@width\undefined
+\let\centeredfigure@height\undefined
+\let\centeredfigure@caption\undefined
+\let\centeredfigure@label\undefined
+}
+\define@key{hip}{scale}{\edef\centeredfigure@scale{#1}}
+\define@key{hip}{width}{\edef\centeredfigure@width{#1}}
+\define@key{hip}{height}{\edef\centeredfigure@height{#1}}
+\define@key{hip}{place}{\edef\centeredfigure@place{#1}}
+\define@key{hip}{caption}{\edef\centeredfigure@caption{#1}}
+\define@key{hip}{label}{\edef\centeredfigure@label{#1}}

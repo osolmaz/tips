@@ -1,0 +1,72 @@
+#+title: Bash Shell: Replace a String With Another String In All Files Using sed and Perl -pie Options
+
+#+author: Nix Craft
+#+date: November 27, 2007, LAST UPDATED March 9, 2011
+#+link: http://www.cyberciti.biz/faq/unix-linux-replace-string-words-in-many-files/
+
+How do I replace a string with another string in all files? For example, ~/foo directory has 100s of text file and I'd like to find out xyz string and replace with abc. I'd like to use sed or any other tool to replace all occurrence of the word.
+
+The sed command is designed for this kind of work i.e. find and replace strings or words from a text file under Apple OX, *BSD, Linux, and UNIX like operating systems. The perl can be also used as described below.
+
+* sed replace word / string syntax
+
+The syntax is as follows:
+#+begin_src sh
+sed -i 's/old-word/new-word/g' *.txt
+#+end_src
+
+GNU sed command can edit files in place (makes backup if extension supplied) using the -i option. If you are using an old UNIX sed command version try the following syntax:
+
+#+begin_src sh
+sed 's/old/new/g' input.txt > output.txt
+#+end_src
+
+You can use old sed syntax along with bash for loop:
+
+#+begin_src sh
+#!/bin/bash
+OLD="xyz"
+NEW="abc"
+DPATH="/home/you/foo/*.txt"
+BPATH="/home/you/bakup/foo"
+TFILE="/tmp/out.tmp.$$"
+[ ! -d $BPATH ] && mkdir -p $BPATH || :
+for f in $DPATH
+do
+  if [ -f $f -a -r $f ]; then
+    /bin/cp -f $f $BPATH
+   sed "s/$OLD/$NEW/g" "$f" > $TFILE && mv $TFILE "$f"
+  else
+   echo "Error: Cannot read $f"
+  fi
+done
+/bin/rm $TFILE
+#+end_src
+
+* A Note About Bash Escape Character
+
+A non-quoted backslash \ is the Bash escape character. It preserves the literal value of the next character that follows, with the exception of newline. If a \newline pair appears, and the backslash itself is not quoted, the \newline is treated as a line continuation (that is, it is removed from the input stream and effectively ignored). This is useful when you would like to deal with UNIX paths. In this example, the sed command is used to replace UNIX path "/nfs/apache/logs/rawlogs/access.log" with "__DOMAIN_LOG_FILE__":
+
+#+begin_src sh
+#!/bin/bash
+## Our path
+_r1="/nfs/apache/logs/rawlogs/access.log"
+
+## Escape path for sed using bash find and replace
+_r1="${_r1//\//\\/}"
+
+# replace __DOMAIN_LOG_FILE__ in our sample.awstats.conf
+sed -e "s/__DOMAIN_LOG_FILE__/${_r1}/" /nfs/conf/awstats/sample.awstats.conf  > /nfs/apache/logs/awstats/awstats.conf
+
+# call awstats
+/usr/bin/awstats -c /nfs/apache/logs/awstats/awstats.conf
+#+end_src
+
+The $_r1 is escaped using bash find and replace parameter substitution syntax to replace each occurrence of / with \/.
+
+* perl -pie Syntax For Find and Replace
+
+The syntax is as follows:
+#+begin_src sh
+perl -pie 's/old-word/new-word/g' input.file > new.output.file
+#+end_src
