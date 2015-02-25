@@ -1,0 +1,27 @@
+#+title: Maxima Tips
+
+* Startup Defaults
+
+I use wxMaxima (maxima) as my primary CAS software Here are some defaults that exist in
+every file I author.
+
+These two lines need to be there for the debugging cycle. When I make a change
+to the code, I prefer to evaluate every line from scratch to avoid bugs. These
+lines need to be added to the top to ensure a fresh start each time.
+
+#+begin_src maxima
+kill(all);
+reset();
+#+end_src
+
+Some packages are essential in some contexts, and better be noted:
+#+begin_src maxima
+load("eigen");
+load("vect");
+#+end_src
+
+Enables auto-simplification of some expressions.
+#+begin_src maxima
+simp: true;
+#+end_src
+
