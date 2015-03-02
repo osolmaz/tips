@@ -1,0 +1,84 @@
+#+title: Merging TIFFs to a Single PDF/Djvu
+
+- Use ScanTailor.
+- Convert colored projects to PDF
+- Convert B/W projets to Djvu
+
+Suggested settings:
+
+- For colored TIFFs when turned into PDF
+  - 150dpi A4page = approx. 120kB/page
+- For B/W TIFFS when turned into Djvu:
+  - 200dpi A4page = approx. 10kB/page
+  - 300dpi A4page = approx. 15kB/page
+
+** Colored TIFFs into PDF
+#+begin_src sh
+for i in *.tif; tiff2pdf -j -o $i.pdf $i
+pdftk *.pdf cat output result.pdf
+#+end_src
+
+1. Convert all the TIFFs to single page PDFs using `tiff2pdf`.
+2. Use `pdftk` to merge PDFs into one.
+
+** B/W TIFFs into Djvu
+
+#+begin_src sh
+#!/bin/bash
+#
+# any2djvu-bw
+#
+
+if [ -z `which anytopnm` -o -z `which ppmtopgm` -o -z `which pgmtopbm`\
+    -o -z `which cjb2` ]; then
+  usage
+  echo "Error: anytopnm, ppmtopgm, pgmtopbm and cjb2 are needed"
+  echo
+  exit 1
+fi
+
+shopt -s extglob
+
+DEFMASK=*.tif
+# uncomment the following line to compile a bundled DjVu document
+OUTFILE="result.djvu"
+
+function usage() {
+  echo
+  echo "usage:"
+  echo
+  echo "$0 [\"REGEXP\"]"
+  echo "    converts single pages with the default mask $DEFMASK (or REGEXP if provided)"
+  echo "    in the current directory to single-page black and white djvu documents"
+# uncomment the following line to compile a bundled DjVu document
+ echo "    and bundles them as a djvu file $OUTFILE"
+  echo
+}
+
+if [ -n "$1" ]; then
+  MASK=$1
+else
+  MASK=$DEFMASK
+fi
+
+for i in $MASK; do
+  if [ ! -e "$i" ]; then
+    usage
+    echo "Error: current directory must contain files with the mask $MASK"
+    echo
+    exit 1
+  fi
+  export base="${i%.*}"
+  if cjb2 "$i" "$base.djvu" &> /dev/null; then
+      echo "$i"
+  else
+      anytopnm "$i" | ppmtopgm | pgmtopbm -value 0.450 > "$i.pbm"
+      cjb2 "$i.pbm" "$i.djvu"
+      echo "$i: Converted to bitonal"
+      rm -f "$i.pbm"
+  fi
+  # echo $base
+done
+
+djvm -c $OUTFILE *.djvu
+#+end_src
