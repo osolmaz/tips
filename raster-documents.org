@@ -1,16 +1,25 @@
-#+title: Merging TIFFs to a Single PDF/Djvu
+#+title: Tips for While Editing Raster Documents
 
-- Use ScanTailor.
-- Convert colored projects to PDF
-- Convert B/W projets to Djvu
+** Common Values and Statistics
 
-Suggested settings:
+*** Common File Formats
+
+- TIFF
+- PDF
+- DejaVu and related formats
+
+
+*** Common File Sizes
 
 - For colored TIFFs when turned into PDF
   - 150dpi A4page = approx. 120kB/page
 - For B/W TIFFS when turned into Djvu:
   - 200dpi A4page = approx. 10kB/page
   - 300dpi A4page = approx. 15kB/page
+
+** Homogenizing, Editing, Crispifying and Monochroming Raster Documents
+
+Use ScanTailor for aforementioned purposes.
 
 ** Colored TIFFs into PDF
 #+begin_src sh
