@@ -1,0 +1,12 @@
+#+title: MATLAB Tips
+
+
+* Specifying Legend Text Inside Corresponding Plot Functions
+
+#+begin_src MATLAB
+figure;
+hold on;
+plot(...,'DisplayName','DataSet1');
+plot(...,'DisplayName','DataSet2');
+legend(gca,'show');
+#+end_src
