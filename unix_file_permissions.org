@@ -1,0 +1,19 @@
+#+title: File Permissions in Unix
+
+* Default Permissions
+
+For newly created /files/, default is ~-rw-r--r--~ or ~644~.
+To revert all files
+recursively to these set of permissions, use
+
+#+begin_src sh
+find . -type f -exec chmod 644 {} \;
+#+end_src
+
+For newly created /directories/, default is ~drwxr-xr-x~ or ~755~
+To revert all directories
+recursively to these set of permissions, use
+
+#+begin_src sh
+find . -type d -exec chmod 755 {} \;
+#+end_src
