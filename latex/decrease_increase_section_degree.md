@@ -16,9 +16,8 @@ or directly into your terminal:
 
 Increasing is the same except the other way around:
 
-    sed -i 's/\\subparagraph/\\paragraph/g' *.tex
-    sed -i 's/\\paragraph/\\subsubsection/g' *.tex
-    sed -i 's/\\subsubsection/\\subsection/g' *.tex
-    sed -i 's/\\subsection/\\section/g' *.tex
     sed -i 's/\\section/\\chapter/g' *.tex
-
+    sed -i 's/\\subsection/\\section/g' *.tex
+    sed -i 's/\\subsubsection/\\subsection/g' *.tex
+    sed -i 's/\\paragraph/\\subsubsection/g' *.tex
+    sed -i 's/\\subparagraph/\\paragraph/g' *.tex
