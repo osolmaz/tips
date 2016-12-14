@@ -10,7 +10,8 @@ Create the following file and either put it in
 - `~/.config/fontconfig/fonts.conf`
 - or `/etc/fonts/conf.avail/10-hinting.conf`, and then link it into `/etc/fonts/conf.d`.
 
-`<?xml version="1.0"?>
+```xml
+<?xml version="1.0"?>
 <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
 <fontconfig>
   <match target="font">
@@ -27,4 +28,5 @@ Create the following file and either put it in
       <const>rgb</const>
     </edit>
   </match>
-</fontconfig>`
+</fontconfig>
+```
