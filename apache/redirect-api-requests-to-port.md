@@ -10,6 +10,7 @@ forwarded to the API server.
 First, find and uncomment the following lines on `/etc/httpd/conf/httpd.conf`
 
     # LoadModule proxy_module modules/mod_proxy.so
+    # LoadModule proxy_http_module modules/mod_proxy_http.so
     # Include conf/extra/httpd-vhosts.conf
 
 Then, add the following virtual host to
